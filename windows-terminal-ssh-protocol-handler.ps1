@@ -19,11 +19,11 @@
 # Set the SSH Client you would like to call
 # Options: <openssh|plink>
 # Default: openssh
-$sshPreferredClient = 'openssh'
+$sshPreferredClient = 'plink'
 
 # Set if you would like to see verbose output from the SSH Clients (Debug)
 # Default: false
-$sshVerbosity = $false
+$sshVerbosity = $true
 
 # Set the time OpenSSH will wait for connection in seconds before timing out
 # Default: <emptystring> - We will let OpenSSH decide based on the system TCP timeout
@@ -39,29 +39,28 @@ $wtProfile = ''
 $inputURI = $args[0]
 $inputArguments = @{}
 
-if ($inputURI -match '^(?<Protocol>\w+)\:\/\/(?:(?<Username>[\w|\@|\.]+)@)?(?<Host>.+)\:(?<Port>\d{2,5})$') {
+if ($inputURI -match '(?<Protocol>\w+)\:\/\/(?:(?<Username>[\w|\@|\.]+)@)?(?<HostAddress>.+)\:(?<Port>\d{2,5})') {
     $inputArguments.Add('Protocol', $Matches.Protocol)
     $inputArguments.Add('Username', $Matches.Username) # Optional
     $inputArguments.Add('Port', $Matches.Port)
-    $rawHost = $Matches.Host
-
-   switch -Regex ($rawHost)
-   {
+	$rawHost = $Matches.HostAddress
+	
+    switch -Regex ($rawHost) {
        '^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$' {
             # Basic test for IP Address 
-            $inputArguments.Add('Host', $rawHost)
+            $inputArguments.Add('HostAddress', $rawHost)
             Break
         }
        '(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)' { 
             # Test for a valid Hostname
-            $inputArguments.Add('Host', $rawHost)
+            $inputArguments.Add('HostAddress', $rawHost)
             Break
         }
         Default {
             Write-Warning 'The Hostname/IP Address passed is invalid. Exiting...'
             Exit  
         }
-   }
+    }
 } else {
     Write-Warning 'The URL passed to the handler script is invalid. Exiting...'
     Exit    
@@ -93,9 +92,9 @@ if ($sshPreferredClient -eq 'openssh') {
     }
     
     if ($inputArguments.Username) {
-        $sshArguments += "{0} -l {1} -p {2}" -f $inputArguments.Host, $inputArguments.Username, $inputArguments.Port
+        $sshArguments += "{0} -l {1} -p {2}" -f $inputArguments.HostAddress, $inputArguments.Username, $inputArguments.Port
     } else {
-        $sshArguments += "{0} -p {1}" -f $inputArguments.Host, $inputArguments.Port   
+        $sshArguments += "{0} -p {1}" -f $inputArguments.HostAddress, $inputArguments.Port   
     }
     
     if ($sshVerbosity) {
@@ -117,9 +116,9 @@ if ($sshPreferredClient -eq 'plink') {
     }
 
     if ($inputArguments.Username) {
-        $sshArguments += "{0} -l {1} -P {2}" -f $inputArguments.Host, $inputArguments.Username, $inputArguments.Port
+        $sshArguments += "{0} -l {1} -P {2}" -f $inputArguments.HostAddress, $inputArguments.Username, $inputArguments.Port
     } else {
-        $sshArguments += "{0} -P {1}" -f $inputArguments.Host, $inputArguments.Port   
+        $sshArguments += "{0} -P {1}" -f $inputArguments.HostAddress, $inputArguments.Port   
     }
 
     if ($sshVerbosity) {
