@@ -19,11 +19,11 @@
 # Set the SSH Client you would like to call
 # Options: <openssh|plink>
 # Default: openssh
-$sshPreferredClient = 'plink'
+$sshPreferredClient = 'openssh'
 
 # Set if you would like to see verbose output from the SSH Clients (Debug)
 # Default: false
-$sshVerbosity = $true
+$sshVerbosity = $false
 
 # Set the time OpenSSH will wait for connection in seconds before timing out
 # Default: <emptystring> - We will let OpenSSH decide based on the system TCP timeout
