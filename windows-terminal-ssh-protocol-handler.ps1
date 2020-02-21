@@ -58,12 +58,12 @@ if ($inputURI -match '(?<Protocol>\w+)\:\/\/(?:(?<Username>[\w|\@|\.]+)@)?(?<Hos
         }
         Default {
             Write-Warning 'The Hostname/IP Address passed is invalid. Exiting...'
-            Exit  
+            Exit
         }
     }
 } else {
     Write-Warning 'The URL passed to the handler script is invalid. Exiting...'
-    Exit    
+    Exit
 }
 
 $windowsTerminalStatus = Get-AppxPackage -Name 'Microsoft.WindowsTerminal*' | Select-Object -ExpandProperty 'Status'
@@ -123,7 +123,7 @@ if ($sshPreferredClient -eq 'plink') {
 
     if ($sshVerbosity) {
         $sshArguments += " -v"
-    }    
+    }
 }
 
 $wtArguments = ''
