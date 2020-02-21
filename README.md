@@ -28,9 +28,9 @@ Basic usage of the script involves calling it via powershell. The first argument
 
 ```powershell .\windows-terminal-ssh-protocol-handler.ps1 ssh://<username>@<ipAddress|hostname>:<port>```
 
-The `URL:Protocol SSH` can be set in the Windows Registry to point to this script. TODO: create a reg file that will do this heavy lifting.
+`URL:Protocol SSH` can be set in the Windows Registry to point to this script via the included `add-ssh-handler.reg`. You MUST change the `<user>` value in the reg file before importing it. As with andything that adds to the registry, be cautious when editing and importing.
 
-```powershell "C:\Users\<windowsuser>\Documents\PowerShell\Scripts\windows-terminal-ssh-protocol-handler.ps1" %1```
+```powershell "C:\Users\<user>\Documents\PowerShell\Scripts\windows-terminal-ssh-protocol-handler.ps1" %1```
 
 #### Script Options:
 The script can be customized by modifying the options listed at the top of the script file.
