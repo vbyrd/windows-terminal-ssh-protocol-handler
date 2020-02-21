@@ -39,32 +39,31 @@ $wtProfile = ''
 $inputURI = $args[0]
 $inputArguments = @{}
 
-if ($inputURI -match '^(?<Protocol>\w+)\:\/\/(?:(?<Username>[\w|\@|\.]+)@)?(?<Host>.+)\:(?<Port>\d{2,5})$') {
+if ($inputURI -match '(?<Protocol>\w+)\:\/\/(?:(?<Username>[\w|\@|\.]+)@)?(?<HostAddress>.+)\:(?<Port>\d{2,5})') {
     $inputArguments.Add('Protocol', $Matches.Protocol)
     $inputArguments.Add('Username', $Matches.Username) # Optional
     $inputArguments.Add('Port', $Matches.Port)
-    $rawHost = $Matches.Host
-
-   switch -Regex ($rawHost)
-   {
+	$rawHost = $Matches.HostAddress
+	
+    switch -Regex ($rawHost) {
        '^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$' {
             # Basic test for IP Address 
-            $inputArguments.Add('Host', $rawHost)
+            $inputArguments.Add('HostAddress', $rawHost)
             Break
         }
        '(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)' { 
             # Test for a valid Hostname
-            $inputArguments.Add('Host', $rawHost)
+            $inputArguments.Add('HostAddress', $rawHost)
             Break
         }
         Default {
             Write-Warning 'The Hostname/IP Address passed is invalid. Exiting...'
-            Exit  
+            Exit
         }
-   }
+    }
 } else {
     Write-Warning 'The URL passed to the handler script is invalid. Exiting...'
-    Exit    
+    Exit
 }
 
 $windowsTerminalStatus = Get-AppxPackage -Name 'Microsoft.WindowsTerminal*' | Select-Object -ExpandProperty 'Status'
@@ -93,9 +92,9 @@ if ($sshPreferredClient -eq 'openssh') {
     }
     
     if ($inputArguments.Username) {
-        $sshArguments += "{0} -l {1} -p {2}" -f $inputArguments.Host, $inputArguments.Username, $inputArguments.Port
+        $sshArguments += "{0} -l {1} -p {2}" -f $inputArguments.HostAddress, $inputArguments.Username, $inputArguments.Port
     } else {
-        $sshArguments += "{0} -p {1}" -f $inputArguments.Host, $inputArguments.Port   
+        $sshArguments += "{0} -p {1}" -f $inputArguments.HostAddress, $inputArguments.Port   
     }
     
     if ($sshVerbosity) {
@@ -117,14 +116,14 @@ if ($sshPreferredClient -eq 'plink') {
     }
 
     if ($inputArguments.Username) {
-        $sshArguments += "{0} -l {1} -P {2}" -f $inputArguments.Host, $inputArguments.Username, $inputArguments.Port
+        $sshArguments += "{0} -l {1} -P {2}" -f $inputArguments.HostAddress, $inputArguments.Username, $inputArguments.Port
     } else {
-        $sshArguments += "{0} -P {1}" -f $inputArguments.Host, $inputArguments.Port   
+        $sshArguments += "{0} -P {1}" -f $inputArguments.HostAddress, $inputArguments.Port   
     }
 
     if ($sshVerbosity) {
         $sshArguments += " -v"
-    }    
+    }
 }
 
 $wtArguments = ''
