@@ -21,6 +21,7 @@ Use at your own risk. I haven't extensively tested this and I do not profess to 
     - How-to Enable: https://bit.ly/2HIcRDm
   - Option 2: plink SSH Client (Putty)
     - Download Link: https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html
+    - Note: plink.exe path must be defined in your PATH environment variable
 * **Registry Entries** - to set the script as the handler for `URL:Protocol SSH`
 
 ## Usage
