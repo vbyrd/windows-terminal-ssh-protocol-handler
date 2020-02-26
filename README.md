@@ -1,4 +1,4 @@
-# Windows Terminal SSH Protocol Handler
+# SSH Protocol Handler for Windows Terminal
 
 ## Description
 An SSH Protocol Handler Powershell Script for opening SSH connections in Windows Terminal.
